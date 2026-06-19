@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        
+        <!-- Fund User Group -->
+        <record id="group_fund_user" model="res.groups">
+            <field name="name">Fund User</field>
+            <field name="category_id" ref="base.module_category_finance"/>
+            <field name="comment">User can create and submit fund requests</field>
+        </record>
+        
+        <!-- Fund Manager Group -->
+        <record id="group_fund_manager" model="res.groups">
+            <field name="name">Fund Manager</field>
+            <field name="category_id" ref="base.module_category_finance"/>
+            <field name="implied_ids" eval="[(4, ref('group_fund_user'))]"/>
+            <field name="comment">Manager can approve/reject fund requests</field>
+        </record>
+        
+    </data>
+</odoo>
