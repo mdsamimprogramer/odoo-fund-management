@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        <!-- ==================== LIST VIEW ==================== -->
+        <record id="view_fund_request_list" model="ir.ui.view">
+            <field name="name">fund.request.list</field>
+            <field name="model">fund.request</field>
+            <field name="arch" type="xml">
+                <list string="Fund Requests" decoration-success="status=='approved'" 
+                      decoration-warning="status=='submitted'" 
+                      decoration-danger="status=='rejected'"
+                      decoration-info="status=='draft'">
+                    <field name="request_number" string="Request #"/>
+                    <field name="employee_name" string="Employee"/>
+                    <field name="request_date" string="Date"/>
+                    <field name="amount" string="Amount" sum="Total Amount"/>
+                    <field name="status" string="Status" widget="badge" 
+                           decoration-success="status=='approved'" 
+                           decoration-warning="status=='submitted'"
+                           decoration-danger="status=='rejected'"
+                           decoration-info="status=='draft'"/>
+                </list>
+            </field>
+        </record>
+        
+        <!-- ==================== FORM VIEW ==================== -->
+        <record id="view_fund_request_form" model="ir.ui.view">
+            <field name="name">fund.request.form</field>
+            <field name="model">fund.request</field>
+            <field name="arch" type="xml">
+                <form string="Fund Request">
+                    <header>
+                        <button name="action_submit" string="Submit" type="object" 
+                                class="oe_highlight" states="draft"
+                                help="Submit the fund request for review"/>
+                        <button name="action_approve" string="Approve" type="object" 
+                                class="oe_highlight" states="submitted"
+                                groups="nn_fund_management.group_fund_manager"
+                                help="Approve the fund request"/>
+                        <button name="action_reject" string="Reject" type="object" 
+                                class="oe_highlight" states="submitted"
+                                groups="nn_fund_management.group_fund_manager"
+                                help="Reject the fund request"/>
+                        <button name="action_reset_to_draft" string="Reset to Draft" type="object" 
+                                states="rejected"
+                                groups="nn_fund_management.group_fund_manager"
+                                help="Reset to draft for re-submission"/>
+                        <button name="action_print_report" string="Print Report" type="object" 
+                                class="oe_highlight" icon="fa-print"
+                                help="Generate and print fund request report"/>
+                        <field name="status" widget="statusbar" 
+                               statusbar_visible="draft,submitted,approved,rejected"/>
+                    </header>
+                    
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="request_number" readonly="1"/>
+                            </h1>
+                        </div>
+                        
+                        <group>
+                            <group string="Request Information">
+                                <field name="employee_id" required="1" 
+                                       help="Select the employee requesting the fund"/>
+                                <field name="employee_name" readonly="1"/>
+                                <field name="request_date" required="1"
+                                       help="Date when the request was submitted"/>
+                            </group>
+                            
+                            <group string="Financial Details">
+                                <field name="amount" required="1" widget="monetary"
+                                       help="Amount of fund requested (must be greater than 0)"/>
+                            </group>
+                        </group>
+                        
+                        <notebook>
+                            <page string="Details">
+                                <group>
+                                    <field name="purpose" required="1" nolabel="1"
+                                           help="Detailed description of fund usage"/>
+                                </group>
+                            </page>
+                            
+                            <page string="Additional Information">
+                                <group>
+                                    <field name="notes" nolabel="1"
+                                           placeholder="Add any additional notes or comments..."/>
+                                </group>
+                                
+                                <group string="Audit Information">
+                                    <field name="created_by" readonly="1"/>
+                                    <field name="last_modified_by" readonly="1"/>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    
+                    <!-- Chatter for communication -->
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="activity_ids" widget="mail_activity"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+        
+        <!-- ==================== SEARCH VIEW ==================== -->
+        <record id="view_fund_request_search" model="ir.ui.view">
+            <field name="name">fund.request.search</field>
+            <field name="model">fund.request</field>
+            <field name="arch" type="xml">
+                <search string="Search Fund Requests">
+                    <!-- Search fields -->
+                    <field name="request_number" string="Request #"/>
+                    <field name="employee_name" string="Employee"/>
+                    <field name="amount" string="Amount"/>
+                    <field name="purpose" string="Purpose"/>
+                    
+                    <separator/>
+                    
+                    <!-- Filters -->
+                    <filter string="Draft" name="draft" domain="[('status', '=', 'draft')]"/>
+                    <filter string="Submitted" name="submitted" domain="[('status', '=', 'submitted')]"/>
+                    <filter string="Approved" name="approved" domain="[('status', '=', 'approved')]"/>
+                    <filter string="Rejected" name="rejected" domain="[('status', '=', 'rejected')]"/>
+                    
+                    <separator/>
+                    
+                    <!-- Group By options -->
+                    <filter string="Status" name="group_by_status" context="{'group_by': 'status'}"/>
+                    <filter string="Employee" name="group_by_employee" context="{'group_by': 'employee_id'}"/>
+                    <filter string="Request Date" name="group_by_date" context="{'group_by': 'request_date'}"/>
+                </search>
+            </field>
+        </record>
+        
+    </data>
+</odoo>
