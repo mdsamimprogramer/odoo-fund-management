@@ -1,25 +1,43 @@
 # NN Fund Management
 
-Production-quality Odoo 18 Community Edition module for the NN Services & Engineering Ltd. Trainee Software Developer assessment.
+A production-ready Odoo 18 Community module for managing organisational fund accounts, approvals and spending workflows.
 
-## Features
+## Table of Contents
 
-- Bank and cash fund accounts with received, available, held and assigned balances.
-- Incoming fund posting with duplicate transaction reference prevention per account.
-- Fund allocation workflow: Draft, GM Approval, MD Approval, Approved, Rejected and Cancelled.
-- Reusable approval engine for allocations, requisitions and transfers.
-- Configurable GM and MD approvers with no self approval.
-- Projects and expense heads with computed allocated, available, hold, spent and transfer balances.
-- Requisitions with hold, reserve, billable remaining amount and closure.
-- Custom bills with partial billing, over-billing prevention and reversal.
-- Fund transfers between projects and expense heads.
-- Chatter, activities and approval/audit history.
-- Dashboard and PDF reports.
-- Automated workflow, balance, bill limit and security tests.
+- [Overview](#overview)
+- [Key Features](#key-features)
+- [Quick Start (Docker)](#quick-start-docker)
+- [Installation](#installation)
+- [Configuration](#configuration)
+- [Usage Workflow](#usage-workflow)
+- [Architecture](#architecture)
+- [Testing](#testing)
+- [Reports](#reports)
+- [Development & Contributions](#development--contributions)
+- [Notes](#notes)
 
-## Docker Setup
+## Overview
 
-From the project root:
+This module provides:
+
+- Bank and cash fund accounts with computed balances (received, available, held, assigned).
+- Incoming fund posting with per-account duplicate transaction reference protection.
+- Approval-driven allocation, requisition and transfer workflows with GM/MD approvers.
+- Project and expense head budgets with allocation, reservation and spending controls.
+- Partial billing, over-billing prevention and bill reversal support.
+- Dashboard views and PDF reports for finance oversight.
+
+## Key Features
+
+- Multi-stage approval flows: Draft → GM Approval → MD Approval → Approved / Rejected / Cancelled
+- Reusable approval engine used across allocations, requisitions and transfers
+- Configurable approvers and security groups to prevent self-approval
+- Activity / chatter integration and approval audit history
+- Automated tests covering balances, workflow rules and security
+
+## Quick Start (Docker)
+
+From the project root, start the stack:
 
 ```bash
 docker compose up -d
@@ -27,82 +45,69 @@ docker compose up -d
 
 Open Odoo at:
 
-```text
 http://localhost:8069
-```
 
-The compose stack uses:
-
-- Odoo 18
-- PostgreSQL 16
-- `./custom_addons` mounted at `/mnt/extra-addons`
+The stack includes Odoo 18 and PostgreSQL 16. The `custom_addons` directory is mounted into the container at `/mnt/extra-addons`.
 
 ## Installation
 
 1. Start the Docker stack.
-2. Create or open an Odoo database.
-3. Enable developer mode.
-4. Update Apps List.
-5. Search for `NN Fund Management`.
-6. Install the module.
+2. Create a new database or open an existing one.
+3. Enable Developer Mode in Odoo.
+4. Update the Apps List and search for "NN Fund Management".
+5. Install the module.
 
 ## Configuration
 
-Go to Fund Management > Configuration > Approval Configuration.
+Navigate to Fund Management → Configuration → Approval Configuration and set:
 
-Configure approvers for:
+- Allocation Approval approvers
+- Requisition Approval approvers
+- Transfer Approval approvers
 
-- Allocation Approval
-- Requisition Approval
-- Transfer Approval
+Assign users to security groups as needed: Fund User, Finance User, GM Approver, MD Approver, Fund Administrator.
 
-Assign users to these security groups as needed:
+## Usage Workflow
 
-- Fund User
-- Finance User
-- GM Approver
-- MD Approver
-- Fund Administrator
-
-## Usage
+Typical flow:
 
 1. Create Fund Accounts.
-2. Post Incoming Funds as a Finance User.
-3. Create Projects and Expense Heads.
-4. Submit Fund Allocations.
-5. Approve first as GM, then as MD.
-6. Create Requisitions against approved project or expense head balances.
-7. Post partial Bills against approved requisitions.
-8. Transfer approved balances between projects and expense heads when required.
-9. Monitor balances from the Dashboard.
+2. Post Incoming Funds (Finance User).
+3. Create Projects and Expense Heads and allocate budgets.
+4. Submit Fund Allocations (Requester).
+5. Approve allocations: first GM, then MD.
+6. Create Requisitions against approved balances.
+7. Post partial Bills against requisitions; handle reversals if necessary.
+8. Transfer balances between projects/expense heads when required.
+9. Monitor balances and reports from the Dashboard.
 
 ## Architecture
 
-The module is split by business responsibility:
+Core modules and responsibility:
 
-- `models/fund_account.py`: source fund accounts and computed account balances.
-- `models/incoming_fund.py`: incoming receipts and transaction reference uniqueness.
-- `models/approval_mixin.py`: reusable approval and activity engine.
-- `models/approval.py`: approval configuration and audit history.
-- `models/fund_allocation.py`: allocation workflow and source balance reservation.
-- `models/fund_project.py`: computed project balances.
-- `models/expense_head.py`: computed expense head balances.
-- `models/fund_requisition.py`: requisition workflow and remaining billable logic.
-- `models/fund_bill.py`: partial bill posting and reversal.
-- `models/fund_transfer.py`: transfer workflow and over-transfer prevention.
-- `models/fund_dashboard.py`: dashboard aggregates.
+- `models/fund_account.py` — Fund accounts and computed balances
+- `models/incoming_fund.py` — Incoming receipts and reference uniqueness
+- `models/approval_mixin.py` — Reusable approval and activity engine
+- `models/approval.py` — Approval configuration and audit history
+- `models/fund_allocation.py` — Allocation workflow and balance reservation
+- `models/fund_project.py` — Project balances and aggregates
+- `models/expense_head.py` — Expense head balances and aggregates
+- `models/fund_requisition.py` — Requisition workflow and remaining billable logic
+- `models/fund_bill.py` — Partial billing and reversal support
+- `models/fund_transfer.py` — Transfer workflow and validation
+- `models/fund_dashboard.py` — Dashboard aggregates and helpers
 
-Balances are computed from business records with ORM dependencies. Workflow actions enforce server-side permissions and validations.
+Business balances are calculated from ORM records. Workflow actions include server-side validations and permission checks.
 
 ## Testing
 
-Run tests from inside the Odoo container:
+Run tests inside the Odoo container:
 
 ```bash
 docker compose exec odoo odoo -d test_db -i nn_fund_management --test-enable --stop-after-init
 ```
 
-For an already installed database:
+To run tests against an already-installed database:
 
 ```bash
 docker compose exec odoo odoo -d test_db -u nn_fund_management --test-enable --stop-after-init
@@ -110,29 +115,31 @@ docker compose exec odoo odoo -d test_db -u nn_fund_management --test-enable --s
 
 ## Reports
 
-Available PDF reports:
+PDF reports provided:
 
 - Fund Allocation
 - Requisition
 - Transfer
 - Fund Summary
 
-## Meaningful Commit History Examples
+## Development & Contributions
 
-```text
+Meaningful commit examples:
+
+```
 feat: scaffold nn fund management module for odoo 18
 feat: add fund accounts and incoming fund posting workflow
 feat: implement reusable gm/md approval engine
 feat: add allocation, requisition and transfer workflows
 feat: add bill posting limits and reversal support
-feat: add dashboard, reports and audit history
 test: cover fund workflows, double spending and security permissions
 docs: add docker setup and module architecture guide
 ```
 
+If you'd like help translating this README to Bengali or adding badges, I can update it.
+
 ## Notes
 
 - No raw SQL is used for business logic.
-- Views use Odoo 18 `list` views.
-- Deprecated `attrs` and `states` XML syntax is not used.
+- Views follow Odoo 18 conventions.
 - IDs are resolved via XML references and ORM lookups.
