@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="expense_head_salary" model="nn.fund.expense.head">
+            <field name="name">Salary</field>
+            <field name="code">SAL</field>
+            <field name="sequence">10</field>
+        </record>
+        <record id="expense_head_rent" model="nn.fund.expense.head">
+            <field name="name">Rent</field>
+            <field name="code">RNT</field>
+            <field name="sequence">20</field>
+        </record>
+        <record id="expense_head_utility" model="nn.fund.expense.head">
+            <field name="name">Utility</field>
+            <field name="code">UTL</field>
+            <field name="sequence">30</field>
+        </record>
+        <record id="expense_head_marketing" model="nn.fund.expense.head">
+            <field name="name">Marketing</field>
+            <field name="code">MKT</field>
+            <field name="sequence">40</field>
+        </record>
+        <record id="expense_head_administrative" model="nn.fund.expense.head">
+            <field name="name">Administrative</field>
+            <field name="code">ADM</field>
+            <field name="sequence">50</field>
+        </record>
+    </data>
+</odoo>

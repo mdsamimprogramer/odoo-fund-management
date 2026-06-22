@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_fund_requisition_list" model="ir.ui.view">
+        <field name="name">nn.fund.requisition.list</field>
+        <field name="model">nn.fund.requisition</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="date"/>
+                <field name="target_type"/>
+                <field name="project_id"/>
+                <field name="expense_head_id"/>
+                <field name="amount"/>
+                <field name="posted_bill_amount"/>
+                <field name="remaining_billable_amount"/>
+                <field name="status"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_fund_requisition_form" model="ir.ui.view">
+        <field name="name">nn.fund.requisition.form</field>
+        <field name="model">nn.fund.requisition</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_submit" type="object" string="Submit" class="btn-primary" invisible="status != 'draft'"/>
+                    <button name="action_send_to_gm" type="object" string="Send to GM" class="btn-primary" invisible="status != 'submitted'"/>
+                    <button name="action_gm_approve" type="object" string="GM Approve" class="btn-primary" invisible="status != 'gm_approval'" groups="nn_fund_management.group_fund_gm_approver"/>
+                    <button name="action_md_approve" type="object" string="MD Approve" class="btn-primary" invisible="status != 'md_approval'" groups="nn_fund_management.group_fund_md_approver"/>
+                    <button name="action_close" type="object" string="Close" invisible="status != 'approved'"/>
+                    <button name="action_reject" type="object" string="Reject" invisible="status not in ('gm_approval', 'md_approval')" groups="nn_fund_management.group_fund_gm_approver,nn_fund_management.group_fund_md_approver"/>
+                    <button name="action_cancel" type="object" string="Cancel" invisible="status not in ('draft', 'submitted', 'gm_approval', 'md_approval')"/>
+                    <button name="action_print_report" type="object" string="Print" invisible="status == 'draft'"/>
+                    <field name="status" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" readonly="1"/>
+                            <field name="target_type"/>
+                            <field name="project_id" invisible="target_type != 'project'" required="target_type == 'project'"/>
+                            <field name="expense_head_id" invisible="target_type != 'expense_head'" required="target_type == 'expense_head'"/>
+                            <field name="purpose"/>
+                        </group>
+                        <group>
+                            <field name="amount"/>
+                            <field name="posted_bill_amount" readonly="1"/>
+                            <field name="remaining_billable_amount" readonly="1"/>
+                            <field name="date"/>
+                            <field name="requested_by_id" readonly="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Bills">
+                            <field name="bill_ids" readonly="1">
+                                <list>
+                                    <field name="name"/>
+                                    <field name="date"/>
+                                    <field name="vendor"/>
+                                    <field name="reference"/>
+                                    <field name="amount"/>
+                                    <field name="status"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Comments">
+                            <field name="comments"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_fund_requisition" model="ir.actions.act_window">
+        <field name="name">Requisitions</field>
+        <field name="res_model">nn.fund.requisition</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

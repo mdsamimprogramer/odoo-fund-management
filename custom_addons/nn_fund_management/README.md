@@ -1,314 +1,138 @@
-# NN Fund Management Module for Odoo 18
+# NN Fund Management
 
-## Overview
-
-This is a production-quality Odoo 18 custom module for comprehensive fund request management. The module provides complete workflow support from request creation through approval/rejection.
+Production-quality Odoo 18 Community Edition module for the NN Services & Engineering Ltd. Trainee Software Developer assessment.
 
 ## Features
 
-### 1. Fund Request Model
+- Bank and cash fund accounts with received, available, held and assigned balances.
+- Incoming fund posting with duplicate transaction reference prevention per account.
+- Fund allocation workflow: Draft, GM Approval, MD Approval, Approved, Rejected and Cancelled.
+- Reusable approval engine for allocations, requisitions and transfers.
+- Configurable GM and MD approvers with no self approval.
+- Projects and expense heads with computed allocated, available, hold, spent and transfer balances.
+- Requisitions with hold, reserve, billable remaining amount and closure.
+- Custom bills with partial billing, over-billing prevention and reversal.
+- Fund transfers between projects and expense heads.
+- Chatter, activities and approval/audit history.
+- Dashboard and PDF reports.
+- Automated workflow, balance, bill limit and security tests.
 
-- **Request Number**: Auto-generated sequence (Format: FR/YYYY/MM/00001)
-- **Employee Name**: Selection from company employees
-- **Request Date**: Date when the request was submitted
-- **Amount**: Fund amount with validation (must be > 0)
-- **Purpose**: Detailed description of fund usage
-- **Status**: Workflow states (Draft, Submitted, Approved, Rejected)
-- **Notes**: Additional comments and information
+## Docker Setup
 
-### 2. Workflow
+From the project root:
 
-The module implements a complete state machine workflow:
-
-```
-Draft → Submitted → Approved/Rejected
-```
-
-**State Transitions:**
-
-- **Submit**: Draft → Submitted (Any user with Fund User role)
-- **Approve**: Submitted → Approved (Fund Manager only)
-- **Reject**: Submitted → Rejected (Fund Manager only)
-- **Reset**: Rejected → Draft (Fund Manager only, for re-submission)
-
-### 3. Business Logic
-
-- **Amount Validation**: Ensures amount is always greater than 0
-- **Status Management**: Prevents invalid state transitions
-- **Audit Trail**: Tracks creation and modification by user
-- **Activity Logging**: Records all state changes in chatter
-- **Deletion Protection**: Prevents deletion of approved/rejected requests
-
-### 4. User Interface
-
-- **Tree View**: List view with color-coded status indicators
-- **Form View**: Comprehensive form with workflow buttons
-- **Search View**: Advanced search with filters and grouping options
-- **Status Bar**: Visual workflow indicator
-
-### 5. Security
-
-- **Fund User Group**: Can create and submit requests
-- **Fund Manager Group**: Can approve/reject and manage all requests
-- **Record-level Access**: Defined in ir_model_access.csv
-
-### 6. Reports
-
-- **PDF Report**: Professional PDF generation for fund requests
-- **Dynamic Naming**: Report names include request number
-- **Comprehensive Details**: Includes all request information and audit trail
-
-## Folder Structure
-
-```
-nn_fund_management/
-├── __init__.py                          # Package initializer
-├── __manifest__.py                      # Module manifest
-├── models/
-│   ├── __init__.py                      # Models package initializer
-│   └── fund_request.py                  # Fund Request model with business logic
-├── views/
-│   ├── fund_request_views.xml           # Tree, Form, Search views
-│   └── fund_request_menu.xml            # Menu items and action window
-├── security/
-│   ├── fund_groups.xml                  # User groups definition
-│   └── ir_model_access.csv              # Access rights configuration
-├── data/
-│   ├── fund_request_sequence.xml        # Sequence configuration
-│   └── fund_request_demo.xml            # Demo data
-├── reports/
-│   ├── fund_request_report.xml          # Report action definition
-│   └── fund_request_report_template.xml # PDF report template
-└── static/
-    └── description/
-        └── icon.png                     # Module icon (if available)
+```bash
+docker compose up -d
 ```
 
-## File Descriptions
+Open Odoo at:
 
-### Core Files
+```text
+http://localhost:8069
+```
 
-#### `__manifest__.py`
+The compose stack uses:
 
-Module configuration file containing:
-
-- Module metadata (name, version, author)
-- Dependencies
-- Data files load order
-- Demo data specification
-
-#### `__init__.py`
-
-Python package initializer that imports the models package.
-
-### Models
-
-#### `models/__init__.py`
-
-Package initializer that imports the fund_request model.
-
-#### `models/fund_request.py`
-
-Main model file containing:
-
-- **Model Definition**: fund.request with inheritance from mail.thread
-- **Fields**: All request fields with proper documentation
-- **Constraints**: Amount validation
-- **Methods**: Workflow actions (submit, approve, reject, reset)
-- **Lifecycle Hooks**: create(), write(), unlink()
-- **Utility Methods**: name_get(), action_print_report()
-
-### Views
-
-#### `views/fund_request_views.xml`
-
-Contains three view definitions:
-
-- **Tree View**: List view with status decorations
-- **Form View**: Detailed form with buttons and notebook tabs
-- **Search View**: Search and filter options
-
-#### `views/fund_request_menu.xml`
-
-Menu structure:
-
-- Fund Management (Main menu)
-  - Fund Requests (Submenu with action)
-
-### Security
-
-#### `security/fund_groups.xml`
-
-User group definitions:
-
-- **Fund User**: Basic user with read/write/create permissions
-- **Fund Manager**: Manager with all permissions including delete
-
-#### `security/ir_model_access.csv`
-
-Access rights matrix defining read, write, create, and delete permissions for each group.
-
-### Data
-
-#### `data/fund_request_sequence.xml`
-
-Sequence configuration for auto-generating request numbers:
-
-- Format: FR/YYYY/MM/00001 (customizable)
-- Padding: 5 digits
-
-#### `data/fund_request_demo.xml`
-
-Demo data including:
-
-- Sample employees (John Doe, Jane Smith)
-- Demo fund requests in various states
-- Used for testing and demonstration
-
-### Reports
-
-#### `reports/fund_request_report.xml`
-
-Report action definition linking to the template.
-
-#### `reports/fund_request_report_template.xml`
-
-QWeb PDF template with:
-
-- Request details section
-- Employee information
-- Financial details
-- Purpose and notes
-- Audit trail
-- Professional formatting
+- Odoo 18
+- PostgreSQL 16
+- `./custom_addons` mounted at `/mnt/extra-addons`
 
 ## Installation
 
-1. **Copy module to Odoo addons directory:**
+1. Start the Docker stack.
+2. Create or open an Odoo database.
+3. Enable developer mode.
+4. Update Apps List.
+5. Search for `NN Fund Management`.
+6. Install the module.
 
-   ```bash
-   cp -r nn_fund_management /path/to/odoo/addons/
-   ```
+## Configuration
 
-2. **Update module list in Odoo:**
-   - Go to Apps → Update Apps List
+Go to Fund Management > Configuration > Approval Configuration.
 
-3. **Install the module:**
-   - Search for "NN Fund Management"
-   - Click Install
+Configure approvers for:
+
+- Allocation Approval
+- Requisition Approval
+- Transfer Approval
+
+Assign users to these security groups as needed:
+
+- Fund User
+- Finance User
+- GM Approver
+- MD Approver
+- Fund Administrator
 
 ## Usage
 
-### Creating a Fund Request
+1. Create Fund Accounts.
+2. Post Incoming Funds as a Finance User.
+3. Create Projects and Expense Heads.
+4. Submit Fund Allocations.
+5. Approve first as GM, then as MD.
+6. Create Requisitions against approved project or expense head balances.
+7. Post partial Bills against approved requisitions.
+8. Transfer approved balances between projects and expense heads when required.
+9. Monitor balances from the Dashboard.
 
-1. Navigate to Fund Management → Fund Requests
-2. Click Create
-3. Fill in employee, amount, and purpose
-4. Click Submit
+## Architecture
 
-### Approving/Rejecting Requests
+The module is split by business responsibility:
 
-1. Go to Fund Management → Fund Requests
-2. Open a submitted request
-3. Click Approve or Reject (Manager only)
+- `models/fund_account.py`: source fund accounts and computed account balances.
+- `models/incoming_fund.py`: incoming receipts and transaction reference uniqueness.
+- `models/approval_mixin.py`: reusable approval and activity engine.
+- `models/approval.py`: approval configuration and audit history.
+- `models/fund_allocation.py`: allocation workflow and source balance reservation.
+- `models/fund_project.py`: computed project balances.
+- `models/expense_head.py`: computed expense head balances.
+- `models/fund_requisition.py`: requisition workflow and remaining billable logic.
+- `models/fund_bill.py`: partial bill posting and reversal.
+- `models/fund_transfer.py`: transfer workflow and over-transfer prevention.
+- `models/fund_dashboard.py`: dashboard aggregates.
 
-### Generating Reports
+Balances are computed from business records with ORM dependencies. Workflow actions enforce server-side permissions and validations.
 
-1. Open a fund request
-2. Click "Print Report"
-3. Save or print the PDF
+## Testing
 
-### Filtering and Searching
+Run tests from inside the Odoo container:
 
-1. Use the search bar to find requests
-2. Apply filters (Status, Date, Employee)
-3. Group by Status, Employee, or Date
+```bash
+docker compose exec odoo odoo -d test_db -i nn_fund_management --test-enable --stop-after-init
+```
 
-## Best Practices Implemented
+For an already installed database:
 
-✅ **Code Quality**
+```bash
+docker compose exec odoo odoo -d test_db -u nn_fund_management --test-enable --stop-after-init
+```
 
-- Comprehensive docstrings for all methods
-- Inline comments for complex logic
-- Proper error handling and validation
-- PEP 8 compliant Python code
+## Reports
 
-✅ **Odoo Conventions**
+Available PDF reports:
 
-- Proper model inheritance (mail.thread)
-- Standard field naming conventions
-- Correct view architecture
-- Proper group and security definitions
+- Fund Allocation
+- Requisition
+- Transfer
+- Fund Summary
 
-✅ **Database Design**
+## Meaningful Commit History Examples
 
-- Optimized field definitions
-- Proper constraints and validation
-- Audit trail implementation
-- Foreign key relationships
+```text
+feat: scaffold nn fund management module for odoo 18
+feat: add fund accounts and incoming fund posting workflow
+feat: implement reusable gm/md approval engine
+feat: add allocation, requisition and transfer workflows
+feat: add bill posting limits and reversal support
+feat: add dashboard, reports and audit history
+test: cover fund workflows, double spending and security permissions
+docs: add docker setup and module architecture guide
+```
 
-✅ **User Experience**
+## Notes
 
-- Intuitive workflow buttons
-- Color-coded status indicators
-- Helpful tooltips and placeholders
-- Responsive design
-
-✅ **Security**
-
-- Role-based access control
-- Record-level permissions
-- Audit trail tracking
-- Data protection constraints
-
-## API Reference
-
-### Fund Request Model Methods
-
-#### `action_submit()`
-
-Submit a draft fund request for review.
-
-#### `action_approve()`
-
-Approve a submitted fund request (Manager only).
-
-#### `action_reject()`
-
-Reject a submitted fund request (Manager only).
-
-#### `action_reset_to_draft()`
-
-Reset a rejected request to draft status for re-submission.
-
-#### `action_print_report()`
-
-Generate and return PDF report for the request.
-
-## Customization
-
-### Adding New Fields
-
-1. Add field definition in `models/fund_request.py`
-2. Update form view in `views/fund_request_views.xml`
-3. Update tree view if needed
-
-### Modifying Workflow
-
-1. Edit status selection in the model
-2. Update state machine logic in workflow methods
-3. Modify status bar in form view
-
-### Changing Report Format
-
-Edit `reports/fund_request_report_template.xml` to customize PDF layout.
-
-## Support
-
-For issues or questions about this module, please contact the development team or refer to the Odoo 18 documentation.
-
----
-
-**Module Version:** 18.0.1.0.0  
-**Author:** NN Development Team  
-**License:** LGPL-3
+- No raw SQL is used for business logic.
+- Views use Odoo 18 `list` views.
+- Deprecated `attrs` and `states` XML syntax is not used.
+- IDs are resolved via XML references and ORM lookups.

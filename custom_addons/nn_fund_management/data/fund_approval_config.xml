@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="approval_config_allocation" model="nn.fund.approval.config">
+            <field name="name">Allocation Approval</field>
+            <field name="target_model">nn.fund.allocation</field>
+        </record>
+
+        <record id="approval_config_requisition" model="nn.fund.approval.config">
+            <field name="name">Requisition Approval</field>
+            <field name="target_model">nn.fund.requisition</field>
+        </record>
+
+        <record id="approval_config_transfer" model="nn.fund.approval.config">
+            <field name="name">Transfer Approval</field>
+            <field name="target_model">nn.fund.transfer</field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="rule_fund_account_company" model="ir.rule">
+            <field name="name">Fund accounts by company</field>
+            <field name="model_id" ref="model_nn_fund_account"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+            <field name="groups" eval="[(4, ref('group_fund_user'))]"/>
+        </record>
+
+        <record id="rule_fund_incoming_company" model="ir.rule">
+            <field name="name">Incoming funds by company</field>
+            <field name="model_id" ref="model_nn_fund_incoming"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+            <field name="groups" eval="[(4, ref('group_fund_user'))]"/>
+        </record>
+
+        <record id="rule_fund_project_company" model="ir.rule">
+            <field name="name">Projects by company</field>
+            <field name="model_id" ref="model_nn_fund_project"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+            <field name="groups" eval="[(4, ref('group_fund_user'))]"/>
+        </record>
+
+        <record id="rule_fund_expense_head_company" model="ir.rule">
+            <field name="name">Expense heads by company</field>
+            <field name="model_id" ref="model_nn_fund_expense_head"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+            <field name="groups" eval="[(4, ref('group_fund_user'))]"/>
+        </record>
+
+        <record id="rule_fund_allocation_company" model="ir.rule">
+            <field name="name">Allocations by company</field>
+            <field name="model_id" ref="model_nn_fund_allocation"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+            <field name="groups" eval="[(4, ref('group_fund_user'))]"/>
+        </record>
+
+        <record id="rule_fund_requisition_company" model="ir.rule">
+            <field name="name">Requisitions by company</field>
+            <field name="model_id" ref="model_nn_fund_requisition"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+            <field name="groups" eval="[(4, ref('group_fund_user'))]"/>
+        </record>
+
+        <record id="rule_fund_bill_company" model="ir.rule">
+            <field name="name">Bills by company</field>
+            <field name="model_id" ref="model_nn_fund_bill"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+            <field name="groups" eval="[(4, ref('group_fund_user'))]"/>
+        </record>
+
+        <record id="rule_fund_transfer_company" model="ir.rule">
+            <field name="name">Transfers by company</field>
+            <field name="model_id" ref="model_nn_fund_transfer"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+            <field name="groups" eval="[(4, ref('group_fund_user'))]"/>
+        </record>
+    </data>
+</odoo>

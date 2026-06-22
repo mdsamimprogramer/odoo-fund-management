@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_fund_approval_config_list" model="ir.ui.view">
+        <field name="name">nn.fund.approval.config.list</field>
+        <field name="model">nn.fund.approval.config</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="target_model"/>
+                <field name="gm_approver_ids" widget="many2many_tags"/>
+                <field name="md_approver_ids" widget="many2many_tags"/>
+                <field name="active"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_fund_approval_config_form" model="ir.ui.view">
+        <field name="name">nn.fund.approval.config.form</field>
+        <field name="model">nn.fund.approval.config</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="target_model"/>
+                        <field name="gm_approver_ids" widget="many2many_tags"/>
+                        <field name="md_approver_ids" widget="many2many_tags"/>
+                        <field name="active"/>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_fund_approval_history_list" model="ir.ui.view">
+        <field name="name">nn.fund.approval.history.list</field>
+        <field name="model">nn.fund.approval.history</field>
+        <field name="arch" type="xml">
+            <list create="0" edit="0" delete="0">
+                <field name="date"/>
+                <field name="reference"/>
+                <field name="model"/>
+                <field name="user_id"/>
+                <field name="previous_status"/>
+                <field name="new_status"/>
+                <field name="amount"/>
+                <field name="comments"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_fund_approval_config" model="ir.actions.act_window">
+        <field name="name">Approval Configuration</field>
+        <field name="res_model">nn.fund.approval.config</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="action_fund_approval_history" model="ir.actions.act_window">
+        <field name="name">Audit History</field>
+        <field name="res_model">nn.fund.approval.history</field>
+        <field name="view_mode">list</field>
+    </record>
+</odoo>

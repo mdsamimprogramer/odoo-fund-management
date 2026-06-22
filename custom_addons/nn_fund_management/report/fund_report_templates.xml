@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_fund_allocation_document">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <h2>Fund Allocation</h2>
+                        <table class="table table-sm">
+                            <tr><td><strong>Reference</strong></td><td><t t-esc="o.name"/></td></tr>
+                            <tr><td><strong>Status</strong></td><td><t t-esc="dict(o._fields['status'].selection).get(o.status)"/></td></tr>
+                            <tr><td><strong>Account</strong></td><td><t t-esc="o.account_id.display_name"/></td></tr>
+                            <tr><td><strong>Destination</strong></td><td><t t-esc="o.project_id.display_name or o.expense_head_id.display_name"/></td></tr>
+                            <tr><td><strong>Amount</strong></td><td><t t-esc="o.currency_id.symbol"/> <t t-esc="'%.2f' % o.amount"/></td></tr>
+                            <tr><td><strong>Date</strong></td><td><t t-esc="o.date"/></td></tr>
+                            <tr><td><strong>Requested By</strong></td><td><t t-esc="o.requested_by_id.name"/></td></tr>
+                        </table>
+                        <p t-if="o.comments"><strong>Comments:</strong> <t t-esc="o.comments"/></p>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <template id="report_fund_requisition_document">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <h2>Fund Requisition</h2>
+                        <table class="table table-sm">
+                            <tr><td><strong>Reference</strong></td><td><t t-esc="o.name"/></td></tr>
+                            <tr><td><strong>Status</strong></td><td><t t-esc="dict(o._fields['status'].selection).get(o.status)"/></td></tr>
+                            <tr><td><strong>Target</strong></td><td><t t-esc="o.project_id.display_name or o.expense_head_id.display_name"/></td></tr>
+                            <tr><td><strong>Approved Amount</strong></td><td><t t-esc="o.currency_id.symbol"/> <t t-esc="'%.2f' % o.amount"/></td></tr>
+                            <tr><td><strong>Posted Bills</strong></td><td><t t-esc="o.currency_id.symbol"/> <t t-esc="'%.2f' % o.posted_bill_amount"/></td></tr>
+                            <tr><td><strong>Remaining Billable</strong></td><td><t t-esc="o.currency_id.symbol"/> <t t-esc="'%.2f' % o.remaining_billable_amount"/></td></tr>
+                            <tr><td><strong>Purpose</strong></td><td><t t-esc="o.purpose"/></td></tr>
+                        </table>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <template id="report_fund_transfer_document">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <h2>Fund Transfer</h2>
+                        <table class="table table-sm">
+                            <tr><td><strong>Reference</strong></td><td><t t-esc="o.name"/></td></tr>
+                            <tr><td><strong>Status</strong></td><td><t t-esc="dict(o._fields['status'].selection).get(o.status)"/></td></tr>
+                            <tr><td><strong>Source</strong></td><td><t t-esc="o.source_project_id.display_name or o.source_expense_head_id.display_name"/></td></tr>
+                            <tr><td><strong>Destination</strong></td><td><t t-esc="o.destination_project_id.display_name or o.destination_expense_head_id.display_name"/></td></tr>
+                            <tr><td><strong>Amount</strong></td><td><t t-esc="o.currency_id.symbol"/> <t t-esc="'%.2f' % o.amount"/></td></tr>
+                            <tr><td><strong>Reason</strong></td><td><t t-esc="o.reason"/></td></tr>
+                        </table>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <template id="report_fund_summary_document">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <h2>Fund Summary</h2>
+                        <table class="table table-sm">
+                            <tr><td><strong>Total Received</strong></td><td><t t-esc="o.currency_id.symbol"/> <t t-esc="'%.2f' % o.total_received"/></td></tr>
+                            <tr><td><strong>Unassigned Balance</strong></td><td><t t-esc="o.currency_id.symbol"/> <t t-esc="'%.2f' % o.unassigned_balance"/></td></tr>
+                            <tr><td><strong>Held Balance</strong></td><td><t t-esc="o.currency_id.symbol"/> <t t-esc="'%.2f' % o.held_balance"/></td></tr>
+                            <tr><td><strong>Assigned Balance</strong></td><td><t t-esc="o.currency_id.symbol"/> <t t-esc="'%.2f' % o.assigned_balance"/></td></tr>
+                            <tr><td><strong>Spent Balance</strong></td><td><t t-esc="o.currency_id.symbol"/> <t t-esc="'%.2f' % o.spent_balance"/></td></tr>
+                            <tr><td><strong>Pending Approvals</strong></td><td><t t-esc="o.pending_approval_count"/></td></tr>
+                        </table>
+                        <h3>Project Balances</h3>
+                        <table class="table table-sm">
+                            <thead><tr><th>Name</th><th>Allocated</th><th>Available</th><th>Hold</th><th>Spent</th></tr></thead>
+                            <tbody>
+                                <tr t-foreach="o.project_ids" t-as="project">
+                                    <td><t t-esc="project.name"/></td>
+                                    <td><t t-esc="'%.2f' % project.allocated_amount"/></td>
+                                    <td><t t-esc="'%.2f' % project.available_amount"/></td>
+                                    <td><t t-esc="'%.2f' % project.hold_amount"/></td>
+                                    <td><t t-esc="'%.2f' % project.spent_amount"/></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <h3>Expense Head Balances</h3>
+                        <table class="table table-sm">
+                            <thead><tr><th>Name</th><th>Allocated</th><th>Available</th><th>Hold</th><th>Spent</th></tr></thead>
+                            <tbody>
+                                <tr t-foreach="o.expense_head_ids" t-as="head">
+                                    <td><t t-esc="head.name"/></td>
+                                    <td><t t-esc="'%.2f' % head.allocated_amount"/></td>
+                                    <td><t t-esc="'%.2f' % head.available_amount"/></td>
+                                    <td><t t-esc="'%.2f' % head.hold_amount"/></td>
+                                    <td><t t-esc="'%.2f' % head.spent_amount"/></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

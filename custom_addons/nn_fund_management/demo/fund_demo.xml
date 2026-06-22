@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="demo_cash_account" model="nn.fund.account">
+            <field name="name">Head Office Cash</field>
+            <field name="code">CASH-HO</field>
+            <field name="account_type">cash</field>
+        </record>
+
+        <record id="demo_bank_account" model="nn.fund.account">
+            <field name="name">Main Bank Account</field>
+            <field name="code">BANK-MAIN</field>
+            <field name="account_type">bank</field>
+        </record>
+
+        <record id="demo_project_erp" model="nn.fund.project">
+            <field name="name">ERP Implementation</field>
+            <field name="code">ERP</field>
+        </record>
+
+        <record id="demo_incoming_bank" model="nn.fund.incoming">
+            <field name="account_id" ref="demo_bank_account"/>
+            <field name="amount">500000</field>
+            <field name="reference">BANK-TXN-0001</field>
+            <field name="sender">NN Services &amp; Engineering Ltd.</field>
+            <field name="status">posted</field>
+        </record>
+    </data>
+</odoo>

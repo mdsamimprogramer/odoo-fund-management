@@ -5,3 +5,4 @@ Package initializer for Odoo 18
 """
 
 from . import models
+from . import wizard
